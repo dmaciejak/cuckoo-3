@@ -1,5 +1,6 @@
 <section id="static_antivirus">
     {% if analysis.virustotal and analysis.virustotal.response_code %}
+    Detection Rate: {{ analysis.virustotal.positives }} / {{ analysis.virustotal.total }}
     <table class="table table-striped table-bordered">
         <tr>
             <th>Antivirus</th>
