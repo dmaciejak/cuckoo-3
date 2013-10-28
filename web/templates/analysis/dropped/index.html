@@ -48,7 +48,7 @@
                     {% endif %}
                     </td>
                 </tr>
-                {% if file.object_id %}
+                {% if file.object_id and downloadLinks %}
                 <tr>
                     <th></th>
                     <td><a href="{% url "analysis.views.file" "dropped" file.object_id %}" class="btn btn-primary btn-small">Download</a></td>
