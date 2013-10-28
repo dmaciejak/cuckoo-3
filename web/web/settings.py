@@ -125,6 +125,9 @@ INSTALLED_APPS = (
     'analysis',
 )
 
+# Show or hide download download links from the report
+DOWNLOAD_LINKS = True 
+
 LOGIN_REDIRECT_URL = "/"
 
 # A sample logging configuration. The only tangible logging

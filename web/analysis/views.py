@@ -116,11 +116,16 @@ def report(request, task_id):
                                   context_instance=RequestContext(request))
 
     return render_to_response("analysis/report.html",
-                              {"analysis": report},
+                              {"analysis": report, "downloadLinks": settings.DOWNLOAD_LINKS},
                               context_instance=RequestContext(request))
 
 @require_safe
 def file(request, category, object_id):
+    if not settings.DOWNLOAD_LINKS:
+        return render_to_response("error.html",
+                                  {"error" : "This feature is disabled"},
+                                  context_instance=RequestContext(request))
+
     file_object = results_db.fs.files.find_one({"_id": ObjectId(object_id)})
 
     if file_object:
