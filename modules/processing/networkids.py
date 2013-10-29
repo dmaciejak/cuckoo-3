@@ -45,7 +45,6 @@ class NetworkIds(Processing):
                     src_port = result.group(6)                    
                     dst_ip = result.group(7)
                     dst_port = result.group(8)
-                    log.error(dst_ip)
                     if protocol != "tcp" and protocol != "udp":
                         dst_port = -1
                     data = {
