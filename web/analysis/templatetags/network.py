@@ -10,6 +10,8 @@ register = template.Library()
 def icmp_type_to_str (value): 
     if value == 0:
         return "Echo"
+    elif value == 3:
+        return "Destination Unreachable"
     elif value == 5:
         return "Redirect"
     elif value == 8:
