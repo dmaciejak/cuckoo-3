@@ -185,9 +185,13 @@ class Pcap:
             entry["dst"] = conn["dst"]
             entry["type"] = data.type
 
-            # Extract data from dpkg.icmp.ICMP.
+            # Extract data from dpkt.icmp.ICMP.
+            raw_data = data.data.data
             try: 
-                entry["data"] = convert_to_printable(data.data.data)
+                if isinstance(raw_data, dpkt.ip.IP):
+                    entry["data"] = "Tunneled IP packet"
+                else:
+                    entry["data"] = convert_to_printable(raw_data)
             except: 
                 entry["data"] = ""
 
