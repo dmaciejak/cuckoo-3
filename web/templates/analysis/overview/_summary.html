@@ -8,31 +8,37 @@
         </ul>
         <div class="tab-content">
             <div class="tab-pane fade in active" id="summary_files">
-                <div class="well mono">
                 {% if analysis.behavior.summary.files %}
+                    <div class="well mono">
                     {% for file in analysis.behavior.summary.files %}
                         {{file}}<br />
                     {% endfor %}
+                    </div>
+                {% else %}
+                    No files.
                 {% endif %}
-                </div>
             </div>
             <div class="tab-pane fade" id="summary_keys">
-                <div class="well mono">
                 {% if analysis.behavior.summary.keys %}
+                    <div class="well mono">
                     {% for key in analysis.behavior.summary.keys %}
                         {{key}}<br />
                     {% endfor %}
+                    </div>
+                {% else %}
+                    No registry keys.
                 {% endif %}
-                </div>
             </div>
             <div class="tab-pane fade" id="summary_mutexes">
-                <div class="well mono">
                 {% if analysis.behavior.summary.mutexes %}
+                    <div class="well mono">
                     {% for mutex in analysis.behavior.summary.mutexes %}
                         {{mutex}}<br />
                     {% endfor %}
+                    </div>
+                {% else %}
+                    No mutexes.
                 {% endif %}
-                </div>
             </div>
         </div>
     </div>
