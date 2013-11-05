@@ -386,7 +386,6 @@ class Pcap:
             entry["data"] = convert_to_printable(tcpdata)
             entry["uri"] = convert_to_printable(urlunparse(("http",
                                                             host_and_port,
-                                                            entry["host"],
                                                             http.uri, None,
                                                             None, None)))
             entry["body"] = convert_to_printable(http.body)
