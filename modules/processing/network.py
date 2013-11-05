@@ -162,7 +162,7 @@ class Pcap:
         @param data: payload data.
         """
         if self._check_http(data):
-            self._add_http(data, conn["dport"])
+            self._add_http(data, conn["dst"], conn["dport"])
         # SMTP.
         if conn["dport"] == 25:
             self._reassemble_smtp(conn, data)
@@ -360,7 +360,7 @@ class Pcap:
 
         return True
 
-    def _add_http(self, tcpdata, dport):
+    def _add_http(self, tcpdata, dip, dport):
         """Adds an HTTP flow.
         @param tcpdata: TCP data flow.
         @param dport: destination port.
@@ -377,11 +377,15 @@ class Pcap:
             if "host" in http.headers:
                 entry["host"] = convert_to_printable(http.headers["host"])
             else:
-                entry["host"] = ""
+                entry["host"] = dip 
 
             entry["port"] = dport
+            host_and_port = entry["host"]
+            if entry["port"] != 80:
+                host_and_port = "%s:%s" % (entry["host"], entry["port"])
             entry["data"] = convert_to_printable(tcpdata)
             entry["uri"] = convert_to_printable(urlunparse(("http",
+                                                            host_and_port,
                                                             entry["host"],
                                                             http.uri, None,
                                                             None, None)))
