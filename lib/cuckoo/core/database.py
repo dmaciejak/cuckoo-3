@@ -843,7 +843,7 @@ class Database(object):
         @param clock: virtual machine clock time
         @return: cursor or None.
         """
-        if not file_path or not os.path.exists(file_path):
+        if not file_path or not os.path.exists(file_path) or not os.path.getsize(file_path):
             return None
         
         # Convert empty strings and None values to a valid int
