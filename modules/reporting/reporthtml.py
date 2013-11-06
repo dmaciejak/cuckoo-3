@@ -21,6 +21,26 @@ except ImportError:
 class ReportHTML(Report):
     """Stores report in HTML format."""
 
+    def human_time_duration(self, value):
+        """Convert time length to human readable time.
+        @param value: the value to convert.
+        """    
+        mins, secs = divmod(value, 60)
+        if value >= 3600:
+            return '%d h %d min %d s' % (hours, mins, secs)
+        else:
+            return '%d min %d s' % (mins, secs)
+
+    def human_file_size(self, value):
+        """Convert bytes size to human readable size.
+        @param value: the value to convert.
+        """    
+        for x in ['bytes','KB','MB','GB']:
+            if value < 1024.0 and value > -1024.0:
+                return "%3.1f %s" % (value, x)
+            value /= 1024.0
+        return "%3.1f %s" % (value, 'TB')
+
     def run(self, results):
         """Writes report.
         @param results: Cuckoo results dict.
@@ -58,6 +78,8 @@ class ReportHTML(Report):
         env = Environment(autoescape=True)
         env.loader = FileSystemLoader(os.path.join(CUCKOO_ROOT,
                                                    "data", "html"))
+        env.filters['human_file_size'] = self.human_file_size
+        env.filters['human_time_duration'] = self.human_time_duration
 
         try:
             tpl = env.get_template("report.html")
