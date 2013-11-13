@@ -204,7 +204,19 @@ class PortableExecutable:
                                 if hasattr(var_entry, "entry"):
                                     entry = {}
                                     entry["name"] = convert_to_printable(var_entry.entry.keys()[0])
-                                    entry["value"] = convert_to_printable(var_entry.entry.values()[0])
+                                    #special case for 'Translation' converting it to human string language
+                                    if entry["name"] == "Translation":
+                                        values = var_entry.entry.values()[0]
+                                        lang_id, charset_id = values.split()
+                                        lang = int(lang_id,16)
+                                        if lang > 0x0400:
+                                            entry["name"] = "Language"
+                                            #just convert the id to the name based on pefile constant
+                                            entry["value"] = convert_to_printable(pefile.LANG[lang - 0x0400].replace("LANG_","").title())
+                                        else:
+                                            entry["value"] = convert_to_printable(lang_id)
+                                    else:
+                                        entry["value"] = convert_to_printable(var_entry.entry.values()[0])
                                     infos.append(entry)
                     except:
                         continue
