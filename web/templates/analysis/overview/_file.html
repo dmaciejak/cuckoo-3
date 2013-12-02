@@ -40,6 +40,24 @@
                 <td>{{analysis.target.file.ssdeep}}</td>
             </tr>
             <tr>
+                <th>PEiD</th>
+                <td>
+                {% if analysis.target.file.peid_signatures %}
+                    {% if analysis.target.file.peid_signatures|length == 0 %}
+                        None matched
+                    {% else %}
+                    <ul style="margin-top: 0;margin-bottom: 0;">
+                    {% for sign in analysis.target.file.peid_signatures %}
+                        <li>{{sign}}</li>
+                    {% endfor %}
+                    </ul>
+                    {% endif %}
+                {% else %}
+                    None matched
+                {% endif %}
+                </td>
+            </tr>
+            <tr>
                 <th>Yara</th>
                 <td>
                 {% if analysis.target.file.yara %}

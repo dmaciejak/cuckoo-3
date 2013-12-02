@@ -46,6 +46,24 @@
                             <td><span class="mono">{{dropped_file.ssdeep}}</span></td>
                         </tr>
                         <tr>
+                            <th>PEiD</th>
+                            <td>
+                            {% if dropped_file.peid_signatures %}
+                                {% if dropped_file.peid_signatures|length == 0 %}
+                                    None matched
+                                {% else %}
+                                <ul style="margin-top: 0;margin-bottom: 0;">
+                                {% for sign in dropped_file.peid_signatures %}
+                                    <li>{{sign}}</li>
+                                {% endfor %}
+                                </ul>
+                                {% endif %}
+                            {% else %}
+                                None matched
+                            {% endif %}
+                            </td>
+                        </tr>                        
+                        <tr>
                             <th>Yara</th>
                             <td>
                                 {% if dropped_file.yara|length == 0 %}
