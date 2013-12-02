@@ -1,4 +1,5 @@
 <section id="information">
+    {%load format %}
     <div class="panel panel-primary">
         <div class="panel-heading">
             <h4 class="panel-title">Analysis</h4>
@@ -17,7 +18,7 @@
                     <td>{{analysis.info.category|upper}}</td>
                     <td>{{analysis.info.started}}</td>
                     <td>{{analysis.info.ended}}</td>
-                    <td>{{analysis.info.duration}} seconds</td>
+                    <td>{{analysis.info.duration|human_time_duration}}</td>
                 </tr>
             </tbody>
         </table>

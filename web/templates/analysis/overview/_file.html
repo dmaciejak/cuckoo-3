@@ -1,4 +1,5 @@
 <section id="file">
+    {%load format %}
     <h4>File Details</h4>
     <div class="panel panel-default">
         <table class="table table-striped">
@@ -8,7 +9,7 @@
             </tr>
             <tr>
                 <th>File Size</th>
-                <td>{{analysis.target.file.size}} bytes</td>
+                <td>{{analysis.target.file.size|human_file_size}}</td>
             </tr>
             <tr>
                 <th>File Type</th>
