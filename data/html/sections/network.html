@@ -15,7 +15,7 @@
                         {% for host in results.network.hosts %}
                         <tr>
                             <td><span class="mono">{{host.ip}}</span></td>
-                            <td><span class="mono">{{host.country_name}}</span></td>
+                            <td><span class="mono">{{host.country_name|title}}</span></td>
                         </tr>
                         {% endfor %}
                     </table>

@@ -1,4 +1,5 @@
 {% if analysis.dropped|length > 0 %}
+    {%load format %}
     {% for file in analysis.dropped %}
         <div class="panel panel-default">
             <table class="table table-striped">
@@ -8,7 +9,7 @@
                 </tr>
                 <tr>
                     <th>File Size</th>
-                    <td>{{file.size}} bytes</th>
+                    <td>{{file.size|human_file_size}}</th>
                 </tr>
                 <tr>
                     <th>File Type</th>
