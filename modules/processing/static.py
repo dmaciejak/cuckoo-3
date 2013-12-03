@@ -17,6 +17,13 @@ try:
 except ImportError:
     HAVE_PEFILE = False
 
+try:
+    from exiftool import ExifTool
+    HAVE_EXIFTOOL = True
+except:
+    HAVE_EXIFTOOL = False
+
+
 from lib.cuckoo.common.abstracts import Processing
 from lib.cuckoo.common.constants import CUCKOO_ROOT
 from lib.cuckoo.common.objects import File
@@ -255,9 +262,18 @@ class Static(Processing):
         self.key = "static"
         static = {}
 
-        if HAVE_PEFILE:
-            if self.task["category"] == "file":
+
+        if self.task["category"] == "file":
+            if HAVE_PEFILE:
                 if "PE32" in File(self.file_path).get_type():
                     static = PortableExecutable(self.file_path).run()
+                    
+            if HAVE_EXIFTOOL:
+                file_metadata = ExifTool(self.file_path)
+                if file_metadata:
+                    static["metadata"] = {}
+                    result = file_metadata.getAllTags()
+                    if result:
+                        static["metadata"] = result
 
         return static

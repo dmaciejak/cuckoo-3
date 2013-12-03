@@ -1,6 +1,7 @@
 <div class="tabbable tabs">
     <ul class="nav nav-pills" style="margin-bottom: 0;">
-        <li class="active"><a href="#static_analysis_tab" data-toggle="tab">Static Analysis</a></li>
+        <li class="active"><a href="#static_analysis_tab" data-toggle="tab">Binary</a></li>
+        <li><a href="#static_metadata_tab" data-toggle="tab">Metadata</a></li>
         <li><a href="#static_strings_tab" data-toggle="tab">Strings</a></li>
         <li><a href="#static_antivirus_tab" data-toggle="tab">Antivirus</a></li>
     </ul>
@@ -11,6 +12,9 @@
             {% else %}
                 No static analysis available.
             {% endif %}
+        </div>
+        <div class="tab-pane fade" id="static_metadata_tab">
+            {% include "analysis/static/_metadata.html" %}
         </div>
         <div class="tab-pane fade" id="static_strings_tab">
             {% include "analysis/static/_strings.html" %}

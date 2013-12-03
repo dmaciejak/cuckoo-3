@@ -115,6 +115,26 @@
             </div>
         {% endif %}
 
+        {% if results.static.metadata %}
+            <div>
+                <h4><a href="javascript:showHide('metadata');">Metadata</a></h4>
+                <div id="metadata" style="display: none;">  
+                    <table class="table table-striped table-bordered">
+                        <tr>
+                            <th>Name</th>
+                            <th>Value</th>
+                        </tr>
+                        {% for metadata_name in results.static.metadata|sort %}
+                            <tr>
+                                <td>{{metadata_name}}</td>
+                                <td>{{results.static.metadata[metadata_name]}}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        {% endif %}
+
         {% if results.strings %}
             <div>
                 <h4><a href="javascript:showHide('strings');">Strings</a></h4>
