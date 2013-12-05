@@ -47,7 +47,9 @@ class ExifTool(object):
             #remove some unwanted tags, doing that way as -x seems not working for all tags
             ret.pop("Directory")
             ret.pop("ExifToolVersion")
+            ret.pop("FileName")
             ret.pop("FilePermissions")
+            ret.pop("FileSize")
             ret.pop("SourceFile")
         return ret
 
