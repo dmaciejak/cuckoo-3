@@ -472,8 +472,13 @@ class Scheduler:
 
                 # TODO: Windows support
                 if hasattr(os, "statvfs"):
-                    dir_stats = os.statvfs(dir_path)
-
+                    try:
+                        dir_stats = os.statvfs(dir_path)
+                    except OSError as e:
+                        #log can also missing when clean script is called
+                        print("Analysis directory is missing, abording ...")
+                        return
+                    
                     # Free diskspace in megabytes.
                     space_available = dir_stats.f_bavail * dir_stats.f_frsize
                     space_available /= 1024 * 1024
