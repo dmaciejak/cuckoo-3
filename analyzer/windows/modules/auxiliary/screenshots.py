@@ -60,6 +60,8 @@ class Screenshots(Auxiliary, Thread):
             # now upload to host from the StringIO
             nf = NetlogFile("shots/%s.jpg" % str(img_counter).rjust(4, "0"))
             
+            if not nf.sock:
+                continue 
             for chunk in tmpio:
                 nf.sock.sendall(chunk)
             
