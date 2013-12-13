@@ -34,6 +34,13 @@ def choose_package(file_type, file_name):
         return "html"
     elif file_name.endswith(".jar"):
         return "jar"
+    #these need 7-zip to be installed on guest system
+    elif "7-zip" in file_type:
+        return "compress"
+    elif file_type.startswith("RAR"):
+        return "compress"
+    elif file_type.startswith("ARJ"):
+        return "compress"
     elif "Zip" in file_type:
         return "zip"
     else:
