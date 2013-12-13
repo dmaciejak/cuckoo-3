@@ -7,12 +7,14 @@ import json
 import subprocess
 
 
+_EXIFTOOL_INSTALLED = True
+
+
 def _runproc(cmd, fpath=None):
     if not _EXIFTOOL_INSTALLED:
         raise RuntimeError("Running this class requires that exiftool is installed")
     pipe = subprocess.PIPE
-    proc = subprocess.Popen([cmd], shell=True, stdin=pipe, stdout=pipe,
-            stderr=pipe, close_fds=True)
+    proc = subprocess.Popen([cmd], shell=True, stdin=pipe, stdout=pipe, stderr=pipe, close_fds=True)
     proc.wait()
     err = proc.stderr.read()
     if err:
@@ -20,20 +22,16 @@ def _runproc(cmd, fpath=None):
     else:
         return proc.stdout.read()
 
-
-# Test that the exiftool is installed
-_EXIFTOOL_INSTALLED = True
-try:
-    out = _runproc("exiftool -ver")
-except RuntimeError as e:
-    _EXIFTOOL_INSTALLED = False
-    raise e
-
-
 class ExifTool(object):
     def __init__(self, file_path=None):
         if not os.path.exists(file_path):
             return None
+        # Test if the exiftool is installed
+        try:
+            out = _runproc("exiftool -ver")
+        except RuntimeError as e:
+            _EXIFTOOL_INSTALLED = False
+            raise RuntimeError("exiftool could not be found")
         self.file_path = file_path
         super(ExifTool, self).__init__()
 
@@ -46,6 +44,8 @@ class ExifTool(object):
         if ret:
             #remove some unwanted tags, doing that way as -x seems not working for all tags
             ret.pop("Directory")
+            if ret.has_key("Error"):
+                ret.pop("Error")
             ret.pop("ExifToolVersion")
             ret.pop("FileName")
             ret.pop("FilePermissions")
