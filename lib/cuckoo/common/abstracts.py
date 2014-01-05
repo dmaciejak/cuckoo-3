@@ -214,7 +214,7 @@ class Machinery(object):
         """Shutdown the machine manager. Kills all alive machines.
         @raise CuckooMachineError: if unable to stop machine.
         """
-        if len(self.running()) > 0:
+        if self.running() and len(self.running()) > 0:
             log.info("Still %s guests alive. Shutting down...",
                      len(self.running()))
             for machine in self.running():

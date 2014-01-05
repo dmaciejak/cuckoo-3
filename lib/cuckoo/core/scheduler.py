@@ -477,7 +477,8 @@ class Scheduler:
                     except OSError as e:
                         #log can also missing when clean script is called
                         print("Analysis directory is missing, abording ...")
-                        return
+                        self.stop()
+                        continue
                     
                     # Free diskspace in megabytes.
                     space_available = dir_stats.f_bavail * dir_stats.f_frsize
