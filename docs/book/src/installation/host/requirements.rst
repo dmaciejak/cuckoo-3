@@ -40,6 +40,8 @@ The following libraries are not strictly required, but their installation is rec
     * `Pefile`_ (Optional): used for static analysis of PE32 binaries.
     * `Volatility`_ (Optional): used for forensic analysis on memory
     * `MAEC Python bindings`_ (Optional): used for MAEC reporting (use release 4.0 or above).
+    * `geoip`_ (Optional): used to resolve ip to domain name using Maxmind GeoIP db
+    * `m2crypto`_ (Optional): used to extract signer certificates from binary files
     * `Chardet`_ (Optional): used for detecting string encoding.
 
 Some of them are already packaged in Debian/Ubuntu and can be installed with the following command::
@@ -48,7 +50,11 @@ Some of them are already packaged in Debian/Ubuntu and can be installed with the
 
 Except for *python-magic*, *python-dpkt* and *python-libvirt*, the others can be installed through ``pip`` too::
 
+<<<<<<< HEAD
     $ sudo pip install jinja2 pymongo bottle pefile maec django chardet
+=======
+    $ sudo pip install dpkt jinja2 pymongo bottle pefile maec geoip m2crypto
+>>>>>>> Updated doc
 
 *Yara* and *Pydeep* will have to be installed manually, so please refer to their websites.
 
