@@ -96,6 +96,9 @@ def chunk(request, task_id, pid, pagenum):
 
         if not process:
             raise PermissionDenied
+        
+        if pagenum >= len(process["calls"]):
+            raise PermissionDenied
 
         objectid = process["calls"][pagenum]
         chunk = results_db.calls.find_one({"_id": ObjectId(objectid)})
