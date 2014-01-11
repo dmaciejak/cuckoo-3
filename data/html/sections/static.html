@@ -23,6 +23,26 @@
             </div>
         {% endif %}
 
+        {% if results.static.digital_signer %}
+            <div>
+                <h4><a href="javascript:showHide('digital_signer');">Digital Signers</a></h4>
+                <div id="digital_signer" style="display: none;">
+                    <table class="table table-striped table-bordered">
+                        <tr>
+                            <th>Certificate Common Name</th>
+                            <th>Serial Number</th>
+                        </tr>
+                        {% for info in results.static.digital_signer %}
+                            <tr>
+                                <td>{{info.cn}}</td>
+                                <td>{{info.sn}}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        {% endif %}
+
         {% if results.static.pe_sections %}
             <div>
                 <h4><a href="javascript:showHide('pe_sections');">Sections</a></h4>

@@ -1,4 +1,4 @@
-# Copyright (C) 2010-2014 Cuckoo Sandbox Developers.
+# Copyright (C) 2010-2013 Cuckoo Sandbox Developers.
 # This file is part of Cuckoo Sandbox - http://www.cuckoosandbox.org
 # See the file 'docs/LICENSE' for copying permission.
 
@@ -18,13 +18,18 @@ try:
 except ImportError:
     HAVE_PEFILE = False
 
+try:
+    from M2Crypto import m2, BIO, X509, SMIME
+    HAVE_CRYPTO = True
+except ImportError:
+    HAVE_CRYPTO = False
 
 from exiftool import ExifTool
 from lib.cuckoo.common.abstracts import Processing
 from lib.cuckoo.common.constants import CUCKOO_ROOT
 from lib.cuckoo.common.objects import File
 from lib.cuckoo.common.utils import convert_to_printable
-
+from lib.cuckoo.common.utils import to_unicode
 
 # Partially taken from
 # http://malwarecookbook.googlecode.com/svn/trunk/3/8/pescanner.py
@@ -199,8 +204,8 @@ class PortableExecutable:
                             for st_entry in entry.StringTable:
                                 for str_entry in st_entry.entries.items():
                                     entry = {}
-                                    entry["name"] = convert_to_printable(str_entry[0])
-                                    entry["value"] = convert_to_printable(str_entry[1])
+                                    entry["name"] = convert_to_printable(str_entry[0])                 
+                                    entry["value"] = to_unicode(str_entry[1])
                                     infos.append(entry)
                         elif hasattr(entry, "Var"):
                             for var_entry in entry.Var:
@@ -246,6 +251,33 @@ class PortableExecutable:
         results["pe_resources"] = self._get_resources()
         results["pe_versioninfo"] = self._get_versioninfo()
         results["imported_dll_count"] = len([x for x in results["pe_imports"] if x.get("dll")])
+
+        if HAVE_CRYPTO:
+            address = self.pe.OPTIONAL_HEADER.DATA_DIRECTORY[pefile.DIRECTORY_ENTRY['IMAGE_DIRECTORY_ENTRY_SECURITY']].VirtualAddress
+            
+            #check if file is digitally signed
+            if address == 0:
+                return results
+
+            signature = self.pe.write()[address+8:]
+            bio = BIO.MemoryBuffer(signature)
+
+            if bio:
+                swig_pkcs7 = m2.pkcs7_read_bio_der(bio.bio_ptr())
+    
+                if swig_pkcs7:
+                    p7 = SMIME.PKCS7(swig_pkcs7)
+
+                    xst = p7.get0_signers(X509.X509_Stack())
+                    results["digital_signer"] = {}
+                    if xst:
+                        for cert in xst:
+                            sn = cert.get_serial_number()
+                            subject_str = str(cert.get_subject())
+                            cn = subject_str[subject_str.index("/CN=")+len("/CN="):]
+                            results["digital_signer"] = [{"sn":str(sn), "cn":cn}]
+   
+
         return results
 
 class Static(Processing):
