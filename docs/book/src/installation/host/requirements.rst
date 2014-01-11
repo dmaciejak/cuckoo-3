@@ -50,11 +50,7 @@ Some of them are already packaged in Debian/Ubuntu and can be installed with the
 
 Except for *python-magic*, *python-dpkt* and *python-libvirt*, the others can be installed through ``pip`` too::
 
-<<<<<<< HEAD
-    $ sudo pip install jinja2 pymongo bottle pefile maec django chardet
-=======
-    $ sudo pip install dpkt jinja2 pymongo bottle pefile maec geoip m2crypto
->>>>>>> Updated doc
+    $ sudo pip install jinja2 pymongo bottle pefile maec django chardet geoip m2crypto
 
 *Yara* and *Pydeep* will have to be installed manually, so please refer to their websites.
 
