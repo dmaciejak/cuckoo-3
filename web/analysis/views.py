@@ -18,7 +18,7 @@ from gridfs import GridFS
 
 sys.path.append(settings.CUCKOO_PATH)
 
-from lib.cuckoo.core.database import Database, TASK_PENDING
+from lib.cuckoo.core.database import Database
 
 results_db = pymongo.connection.Connection(settings.MONGO_HOST, settings.MONGO_PORT).cuckoo
 fs = GridFS(results_db)
@@ -26,8 +26,8 @@ fs = GridFS(results_db)
 @require_safe
 def index(request):
     db = Database()
-    tasks_files = db.list_tasks(limit=50, category="file", not_status=TASK_PENDING)
-    tasks_urls = db.list_tasks(limit=50, category="url", not_status=TASK_PENDING)
+    tasks_files = db.list_tasks(limit=50, category="file")
+    tasks_urls = db.list_tasks(limit=50, category="url")
 
     analyses_files = []
     analyses_urls = []
@@ -36,35 +36,15 @@ def index(request):
         for task in tasks_files:
             new = task.to_dict()
             new["sample"] = db.view_sample(new["sample_id"]).to_dict()
-            if db.view_errors(task.id):
-                new["errors"] = True
 
             analyses_files.append(new)
 
     if tasks_urls:
         for task in tasks_urls:
-            new = task.to_dict()
-
-            if db.view_errors(task.id):
-                new["errors"] = True
-
-            analyses_urls.append(new)
+            analyses_urls.append(task.to_dict())
 
     return render_to_response("analysis/index.html",
                               {"files": analyses_files, "urls": analyses_urls},
-                              context_instance=RequestContext(request))
-
-@require_safe
-def pending(request):
-    db = Database()
-    tasks = db.list_tasks(status=TASK_PENDING)
-
-    pending = []
-    for task in tasks:
-        pending.append(task.to_dict())
-
-    return render_to_response("analysis/pending.html",
-                              {"tasks" : pending},
                               context_instance=RequestContext(request))
 
 @require_safe
@@ -196,6 +176,8 @@ def search(request):
                 records = results_db.analysis.find({"signatures.description": {"$regex" : value, "$options" : "-1"}}).sort([["_id", -1]])
             elif term == "url":
                 records = results_db.analysis.find({"target.url": value}).sort([["_id", -1]])
+            elif term == "date":
+                records = results_db.analysis.find({"info.started": {"$regex" : value, "$options" : "-1"}}).sort([["_id", -1]])
             else:
                 return render_to_response("analysis/search.html",
                                           {"analyses": None,
