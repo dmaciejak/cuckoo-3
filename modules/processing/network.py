@@ -120,10 +120,11 @@ class Pcap:
         log = logging.getLogger("Processing.Pcap")
         if IS_GEOIP:
             try:
-                cn = gi.country_name_by_addr(ip)
+                temp_cn = gi.country_name_by_addr(ip)
+                if temp_cn:
+                    cn = temp_cn 
             except:
                 log.error("Unable to GEOIP resolve %s" % ip)
-
         return cn
             
     def _add_hosts(self, connection):
