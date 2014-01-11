@@ -5,7 +5,8 @@
 import os
 import json
 import subprocess
-
+from lib.cuckoo.common.utils import convert_to_printable
+from lib.cuckoo.common.utils import to_unicode
 
 _EXIFTOOL_INSTALLED = True
 
@@ -38,7 +39,8 @@ class ExifTool(object):
     def getAllTags(self):
         """Returns all tags.
         """
-        cmd = """exiftool -j -d "%Y:%m:%d %H:%M:%S" "{self.file_path}" """.format(**locals())
+        entry = {}
+        cmd = """exiftool -j -charset UTF8 -d "%Y:%m:%d %H:%M:%S" "{self.file_path}" """.format(**locals())
         out = _runproc(cmd, self.file_path)
         ret = json.loads(out)[0]
         if ret:
@@ -51,7 +53,17 @@ class ExifTool(object):
             ret.pop("FilePermissions")
             ret.pop("FileSize")
             ret.pop("SourceFile")
-        return ret
+
+            #filter invalid chars
+            for str_entry in ret.items():
+                if isinstance(str_entry[1], unicode):
+                    entry[convert_to_printable(str_entry[0])] = to_unicode(str_entry[1])
+                else:
+                    if isinstance(str_entry[1], str):
+                        entry[convert_to_printable(str_entry[0])] = convert_to_printable(str_entry[1])
+                    else:
+                        entry[convert_to_printable(str_entry[0])] = str(str_entry[1])
+        return entry
 
     def getTag(self, tag, default=None):
         """Returns the value of the specified tag, or the default value
