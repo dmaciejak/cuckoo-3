@@ -58,7 +58,7 @@ def index(request):
 def pending(request):
     db = Database()
     tasks = db.list_tasks(status=TASK_PENDING)
-  
+
     pending = []
     if tasks:
         for task in tasks:
