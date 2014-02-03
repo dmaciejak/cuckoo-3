@@ -36,7 +36,7 @@ try:
     from maec.package.analysis import Analysis
     from maec.utils import MAECNamespaceParser
     HAVE_MAEC = True
-except ImportError:
+except (ImportError, AttributeError):
     HAVE_MAEC = False
 
 class MAEC40Report(Report):
