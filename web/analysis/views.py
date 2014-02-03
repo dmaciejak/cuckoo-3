@@ -194,7 +194,7 @@ def search(request):
             elif term == "ip":
                 records = results_db.analysis.find({"network.hosts.ip": value}).sort([["_id", -1]])
             elif term == "signature":
-                records = results_db.analysis.find({"signatures.description": {"$regex" : value, "$options" : "-1"}}).sort([["_id", -1]])
+                records = results_db.analysis.find({"signatures.description": {"$regex" : value, "$options" : "-i"}}).sort([["_id", -1]])
             elif term == "url":
                 records = results_db.analysis.find({"target.url": value}).sort([["_id", -1]])
             elif term == "date":
