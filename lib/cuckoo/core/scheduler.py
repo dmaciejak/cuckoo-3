@@ -7,6 +7,7 @@ import time
 import shutil
 import logging
 import Queue
+import ConfigParser
 from threading import Thread, Lock
 
 from lib.cuckoo.common.config import Config
@@ -195,6 +196,39 @@ class AnalysisManager(Thread):
 
         return options
 
+    def save_config(self, options):
+        """Creates analysis.conf file in storage dir from current analysis options.
+        @param options: current configuration options, dict format.
+        @return: operation status.
+        """
+
+        if type(options) != dict:
+            return False
+
+        config = ConfigParser.RawConfigParser()
+        config.add_section("analysis")
+
+        try:
+            for key, value in options.items():
+                # Options can be UTF encoded.
+                if isinstance(value, basestring):
+                    try:
+                        value = value.encode("utf-8")
+                    except UnicodeEncodeError:
+                        pass
+
+                config.set("analysis", key, value)
+
+            config_path = os.path.join(self.storage, "analysis.conf")
+        
+            with open(config_path, "wb") as config_file:
+                config.write(config_file)
+        except Exception as e:
+            log.error("Cannot create analysis.conf: {0}".format(e))
+            return False
+
+        return True
+
     def launch_analysis(self):
         """Start analysis."""
         succeeded = False
@@ -269,6 +303,9 @@ class AnalysisManager(Thread):
             # Stop Auxiliary modules.
             aux.stop()
 
+            #Save analysis configuration file
+            self.save_config(options)
+            
             # Take a memory dump of the machine before shutting it off.
             if self.cfg.cuckoo.memory_dump or self.task.memory:
                 try:
